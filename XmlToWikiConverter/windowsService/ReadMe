@@ -1,0 +1,15 @@
+This small Java application runs as a Windows service.
+It is used to transform data from an xml file into a Wiki Markup language supporting only bold, italic, and headings.
+Xml files are dropped into a user specified directory, directory path watcher detects changes,
+and a 'file processor' processes the information using recursion.
+
+To build a windows service from a java application Apache commons procrun is used. 
+Procrun is a set of applications which allow Windows users to wrap (mostly) Java applications as a Windows service.
+The library (commons-daemon-1.0.15-bin-windows.zip) can be downloaded from : http://www.apache.org/dist/commons/daemon/binaries/windows/ .
+To run the application:
+1.Export Java application as a runnable jar file
+2.Update 'installService.bat' file to suite your environment (note: relative path to prunsrv.exe has to be used)
+3.Run 'installService.bat' as an Administrator to install the service
+4.Start the service
+5.Add 'report.xml' file from 'resources' directory to the specified 'input' directory
+6.The file gets processed and the output is saved into the specified 'output' directory
