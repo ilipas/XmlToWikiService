@@ -8,8 +8,11 @@ Procrun is a set of applications which allow Windows users to wrap (mostly) Java
 The library (commons-daemon-1.0.15-bin-windows.zip) can be downloaded from : http://www.apache.org/dist/commons/daemon/binaries/windows/ .
 To run the application:
 1.Export Java application as a runnable jar file
-2.Update 'installService.bat' file to suite your environment (note: relative path to prunsrv.exe has to be used)
+2.Update 'installService.bat' file to suite your environment (note: relative path to xtwService64.exe has to be used)
 3.Run 'installService.bat' as an Administrator to install the service
 4.Start the service
 5.Add 'report.xml' file from 'resources' directory to the specified 'input' directory
 6.The file gets processed and the output is saved into the specified 'output' directory
+
+Directory 'Windows service' contains executable 'xmltowiki.jar' file, xtwService64.exe and bat files required to create and run the service.
+File xtwService64.exe is compressed to zip format because Git doesn't allow to push executable files.
