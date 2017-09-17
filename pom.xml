@@ -12,6 +12,7 @@
 		<cglib.version>3.1</cglib.version>
 		<objenesis.version>2.1</objenesis.version>
 		<groovy.backports.compat23.version>2.3.7</groovy.backports.compat23.version>
+		<junit.pragmatists.version>1.0.4</junit.pragmatists.version>
 	</properties>
 
 	<modules>
@@ -48,6 +49,12 @@
 				<groupId>org.codehaus.groovy</groupId>
 				<artifactId>groovy-backports-compat23</artifactId>
 				<version>${groovy.backports.compat23.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>pl.pragmatists</groupId>
+				<artifactId>JUnitParams</artifactId>
+				<version>${junit.pragmatists.version}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -1,7 +1,6 @@
 package com.ili.pas.main;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import com.ili.pas.util.DirectoryPathWatcher;
