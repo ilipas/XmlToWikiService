@@ -2,8 +2,11 @@ package com.ili.pas.util;
 
 public class WikiMarkup {
 	
-	public static String ITALIC = "''";
-	public static String BOLD = "'''";
+	public static final String ITALIC = "''";
+	public static final String BOLD = "'''";
+	
+	private WikiMarkup() {
+	}
 
 	public static String getHeadingLevel(int key) {
 		
@@ -21,9 +24,6 @@ public class WikiMarkup {
 			break;
 		case 4:
 			headingLevel = "====";
-			break;
-		case 5:
-			headingLevel = "=====";
 			break;
 		default:
 			headingLevel = "======";

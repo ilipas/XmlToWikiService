@@ -19,7 +19,8 @@ import com.ili.pas.jaxb.Section;
 
 /**
  * Processes xml files from the user specified directory, creates a new file
- * containing corresponding wiki markup and saves it in the user specified output directory
+ * containing corresponding wiki markup and saves it in the user specified
+ * output directory
  * 
  */
 public class XmlToWikiFileProcessor implements FileProcessor {
@@ -32,10 +33,10 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 	private static final String XML_FILE_EXTENTION = ".xml";
 	private int headingLevel;
 
-	public XmlToWikiFileProcessor(){
-		
+	public XmlToWikiFileProcessor() {
+
 		headingLevel = 0;
-		
+
 		try {
 			jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
 			unmarshaller = jaxbContext.createUnmarshaller();
@@ -52,8 +53,8 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 			System.out.println("Processing file: " + file);
 			Report report = null;
 			try {
-				//Check if xml file
-				if(!file.getName().toLowerCase().endsWith(XML_FILE_EXTENTION)){
+				// Check if xml file
+				if (!file.getName().toLowerCase().endsWith(XML_FILE_EXTENTION)) {
 					System.out.println("Found non xml file " + file);
 					continue;
 				}
@@ -67,11 +68,11 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 				// Write result to .wiki file
 				String filePath = outputDirectory + System.getProperty("file.separator")
 						+ FilenameUtils.getBaseName(file.getName()) + WIKI_FILE_EXTENTION;
-				
+
 				System.out.println("Writing file :" + filePath);
 
 				FileUtils.writeStringToFile(new File(filePath), stringBuilder.toString());
-				
+
 			} catch (IOException | JAXBException e) {
 				System.out.println("Error processing file : " + file.getName());
 			}
@@ -94,7 +95,7 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 			if (ob instanceof String) {
 				if (!isEmptyLine(ob)) {
 					String text = removeTabs(ob);
-					stringBuilder.append(removeNewLineCharacters(text));
+					stringBuilder.append(handleNewLineCharacters(text));
 				}
 			} else if (ob instanceof Italic) {
 				stringBuilder.append(WikiMarkup.ITALIC);
@@ -126,25 +127,25 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 	 * @return boolean true if text contains only tab and new line characters
 	 */
 	protected boolean isEmptyLine(Object text) {
-		String result = ((String) text).replace("\t", "").replace("\n", "");
-		return !(result.length() > 0);
+		String result = ((String) text).replaceAll("(\\r|\\n|\\t)", "").trim();
+		return result.length() == 0;
 	}
 
 	/**
-	 * Remove new line characters from the beginning of the string and remove duplicate
-	 * new line characters from the end of the string
+	 * Remove new line characters from the beginning of the string and duplicate new
+	 * line characters at the end of the string
 	 * 
 	 * @param text,
 	 *            text to process
-	 * @return string with no leading new line characters and one or none new
-	 *         line characters at the end of the string
+	 * @return string without new line characters at the beginning of the string and
+	 *         duplicate new line characters at the end of the string
 	 */
-	protected String removeNewLineCharacters(String text) {
+	protected String handleNewLineCharacters(String text) {
 		while (text.startsWith("\n")) {
 			text = text.replaceFirst("\n", "");
 		}
-		while (text.indexOf("\n") == text.length() - 2) {
-			text = text.replaceFirst("\n", "");
+		while (text.endsWith("\n\n")) {
+			text = text.substring(0, text.length() - 1);
 		}
 		return text;
 	}

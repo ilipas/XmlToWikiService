@@ -24,14 +24,13 @@ public class DirectoryUtil {
 		
 		if (directory.isDirectory()){
 			
-			File[] files = directory.listFiles(new FilenameFilter() {
+			return directory.listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
 					return name.toLowerCase().endsWith(fileExtension);
 				}
 			});
 			
-			return files;
 		}
 		return new File[0];
 	}

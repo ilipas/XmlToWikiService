@@ -23,6 +23,7 @@ public class XmlToWikiFileProcessorTest {
 	private static final String ITALIC_TEXT = "Italic text";
 	private static final String BOLD_TEXT = "Bold text";
 	private static final String TEXT = " Ordinary text ";
+	private static final String NEW_LINE = "\n";
 	private XmlToWikiFileProcessor xmlToWikiFileProcessor;
 
 	@Before
@@ -37,7 +38,7 @@ public class XmlToWikiFileProcessorTest {
 	}
 
 	@Test
-	@Parameters({ "\t", "\n", "\t\t", "\n\n", "\t\n" })
+	@Parameters({ "\t", "\n", "\t\t", "\n\n", "\t\n\n\t", "  ", "" })
 	public void isEmptyLineTestTrue(final String line) {
 		assertTrue(xmlToWikiFileProcessor.isEmptyLine(line));
 	}
@@ -45,7 +46,7 @@ public class XmlToWikiFileProcessorTest {
 	@Test
 	@Parameters(method = "removeNewLineCharactersTestParameters")
 	public void removeNewLineCharactersTest(final String line, final String expected) {
-		assertEquals(expected, xmlToWikiFileProcessor.removeNewLineCharacters(line));
+		assertEquals(expected, xmlToWikiFileProcessor.handleNewLineCharacters(line));
 	}
 
 	@SuppressWarnings("unused")
@@ -64,79 +65,90 @@ public class XmlToWikiFileProcessorTest {
 
 	public static class processContentTestParameters {
 		// method returning parameters has to be prefixed with 'provide'
-		public static Object[] provideContainsTrueParameters() {
+		public static Object[] provideParameters() {
 			return new Object[] { new Object[] { createContent_1(), new StringBuilder(
-					"=Section Heading=\n''Italic text'' Ordinary text '''Bold text\n'''''Italic text'''''Bold text''' Ordinary text ") },
+					" Ordinary text \n=Section Heading=\n=Section Heading=\n''Italic text'' Ordinary text '''Bold text'''") },
 					new Object[] { createContent_2(), new StringBuilder(
-							"=Section Heading=\n''Italic text'' Ordinary text \n=Section Heading=\n Ordinary text '''Bold text'''") },
-					new Object[] { createContent_3(), new StringBuilder(
-							"=Section Heading=\n Ordinary text \n''Italic text''\n'''Bold text'''") } };
+							"=Section Heading=\n Ordinary text \n=Section Heading=\n'''Bold text''Italic text''''' Ordinary text \n Ordinary text ''Italic text'''Bold text'''''") } };
 		}
 
+		/**
+		 * Generates the following content: <br>
+		 * Text <br>
+		 * Section <br>
+		 * Section <br>
+		 * Italic <br>
+		 * Text <br>
+		 * Bold
+		 */
 		private static Object createContent_1() {
 
 			List<Object> content = new ArrayList<Object>();
-			Section section = new Section();
-			section.setHeading(SECTION_HEADING);
 
-			section.getContent().add(getItalic(ITALIC_TEXT));
-			section.getContent().add(new String(TEXT));
-			section.getContent().add(getBold(BOLD_TEXT + "\n"));
+			content.add(new String(TEXT));
 
-			section.getContent().add(getItalic(ITALIC_TEXT));
-			section.getContent().add(getBold(BOLD_TEXT));
-			section.getContent().add(new String(TEXT));
-
-			content.add(section);
-
-			return content;
-		}
-
-		private static Object createContent_2() {
-
-			List<Object> content = new ArrayList<Object>();
-			Section section = new Section();
-			section.setHeading(SECTION_HEADING);
-
-			section.getContent().add(getItalic(ITALIC_TEXT));
-			section.getContent().add(new String(TEXT));
+			Section section1 = new Section();
+			section1.setHeading(SECTION_HEADING);
 
 			Section section2 = new Section();
 			section2.setHeading(SECTION_HEADING);
 
+			section2.getContent().add(getItalic(ITALIC_TEXT, null));
 			section2.getContent().add(new String(TEXT));
-			section2.getContent().add(getBold(BOLD_TEXT));
+			section2.getContent().add(getBold(BOLD_TEXT, null));
 
-			content.add(section);
+			content.add(section1);
 			content.add(section2);
 
 			return content;
 		}
 
-		private static Object createContent_3() {
+		/**
+		 * Generates the following content: <br>
+		 * Section <br>
+		 * Text <br>
+		 * Section <br>
+		 * Bold <Italic> Text <br>
+		 * Text Italic <Bold> <br>
+		 */
+		private static Object createContent_2() {
 
 			List<Object> content = new ArrayList<Object>();
-			Section section = new Section();
-			section.setHeading(SECTION_HEADING);
+			Section section1 = new Section();
+			section1.setHeading(SECTION_HEADING);
 
-			section.getContent().add(new String(TEXT + "\n"));
-			section.getContent().add(getItalic(ITALIC_TEXT + "\n"));
-			section.getContent().add(getBold(BOLD_TEXT));
+			section1.getContent().add(new String(TEXT));
 
-			content.add(section);
+			Section section2 = new Section();
+			section2.setHeading(SECTION_HEADING);
+
+			section2.getContent().add(getBold(BOLD_TEXT, getItalic(ITALIC_TEXT, null)));
+			section2.getContent().add(new String(TEXT + NEW_LINE));
+
+			section2.getContent().add(new String(NEW_LINE + TEXT));
+			section2.getContent().add(getItalic(ITALIC_TEXT, getBold(BOLD_TEXT, null)));
+
+			content.add(section1);
+			content.add(section2);
 
 			return content;
 		}
 
-		private static Object getBold(String boldText) {
+		private static Object getBold(String boldText, Object object) {
 			Bold bold = new Bold();
 			bold.getContent().add(boldText);
+			if (object != null) {
+				bold.getContent().add(object);
+			}
 			return bold;
 		}
 
-		private static Object getItalic(String italicText) {
+		private static Object getItalic(String italicText, Object object) {
 			Italic italic = new Italic();
 			italic.getContent().add(italicText);
+			if (object != null) {
+				italic.getContent().add(object);
+			}
 			return italic;
 		}
 

@@ -65,7 +65,7 @@ public class MainService {
 
 			}
 
-		} catch (final Throwable t) {
+		} catch (final Exception e) {
 			System.err.println("Unhandled exception");
 		} finally {
 			System.err.println("Service stopped");
