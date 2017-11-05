@@ -2,6 +2,7 @@ package com.ili.pas.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -46,7 +47,6 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void processFiles(File[] filesToProcess) {
 
 		for (File file : filesToProcess) {
@@ -71,7 +71,7 @@ public class XmlToWikiFileProcessor implements FileProcessor {
 
 				System.out.println("Writing file :" + filePath);
 
-				FileUtils.writeStringToFile(new File(filePath), stringBuilder.toString());
+				FileUtils.writeStringToFile(new File(filePath), stringBuilder.toString(),  Charset.defaultCharset());
 
 			} catch (IOException | JAXBException e) {
 				System.out.println("Error processing file : " + file.getName());
