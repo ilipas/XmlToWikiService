@@ -58,18 +58,18 @@ public class XmlToWikiFileProcessorTest {
 
 	@Test
 	@Parameters(source = processContentTestParameters.class)
-	public void processContentTest(final List<Object> list, final StringBuilder expectedResult) {
+	public void processContentTest(final List<Object> list, final String expectedResult) {
 		StringBuilder result = xmlToWikiFileProcessor.processContent(list, new StringBuilder());
-		assertEquals(expectedResult.toString(), result.toString());
+		assertEquals(expectedResult, result.toString());
 	}
 
 	public static class processContentTestParameters {
 		// method returning parameters has to be prefixed with 'provide'
 		public static Object[] provideParameters() {
-			return new Object[] { new Object[] { createContent_1(), new StringBuilder(
-					" Ordinary text \n=Section Heading=\n=Section Heading=\n''Italic text'' Ordinary text '''Bold text'''") },
-					new Object[] { createContent_2(), new StringBuilder(
-							"=Section Heading=\n Ordinary text \n=Section Heading=\n'''Bold text''Italic text''''' Ordinary text \n Ordinary text ''Italic text'''Bold text'''''") } };
+			return new Object[] { new Object[] { createContent_1(),
+					" Ordinary text \n=Section Heading=\n=Section Heading=\n''Italic text'' Ordinary text '''Bold text'''" },
+					new Object[] { createContent_2(),
+							"=Section Heading=\n Ordinary text \n=Section Heading=\n'''Bold text''Italic text''''' Ordinary text \n Ordinary text ''Italic text'''Bold text'''''" } };
 		}
 
 		/**
